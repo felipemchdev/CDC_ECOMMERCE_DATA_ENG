@@ -137,15 +137,15 @@ make test
 - Schema evolution is version-tracked but currently single-version in tests.
 - Long-range backfills can be compute-heavy on small local machines.
 
-## Portugues
+## Português
 
-Este repositorio implementa um pipeline local e deterministico de CDC para e-commerce com arquitetura Medallion. O fluxo gera eventos sinteticos, grava Bronze append-only, aplica merge incremental no Silver e monta marts no Gold.
+Este repositório implementa um pipeline local e determinístico de CDC para e-commerce com arquitetura em medalhão. O fluxo gera eventos sintéticos, grava dados brutos imutáveis na camada Bronze (append-only), aplica merge incremental de estado atual na camada Prata (Silver) e produz marts analíticos na camada Ouro (Gold).
 
-O projeto foi estruturado para avaliacao tecnica de engenharia de dados: geracao deterministica por seed, merge idempotente, tratamento de eventos atrasados por `event_ts`, validacao de schema e metricas por execucao.
+O projeto foi estruturado para avaliação técnica de engenharia de dados: geração determinística por seed, merge idempotente, tratamento de eventos atrasados por `event_ts`, validação de esquema dos payloads e métricas por execução.
 
 ### Cobertura Temporal
 
-- Data minima suportada: `2021-01-01`
+- Data mínima suportada: `2021-01-01`
 - Datas anteriores falham por contrato
 - Backfill de 5 anos suportado:
 
