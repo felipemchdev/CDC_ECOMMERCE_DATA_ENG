@@ -111,13 +111,13 @@ make test
 - Add data contracts and schema evolution migration tests for future `schema_version` increments.
 - Add benchmark scenarios and load tests for higher event throughput.
 
-## Português
+## PortuguÃªs
 
-Este repositório implementa um pipeline local e determinístico de CDC (Change Data Capture) para um domínio de e-commerce com arquitetura Medallion. O projeto simula mudanças transacionais para `users`, `products`, `orders`, `order_items` e `payments`, grava logs imutáveis no Bronze, aplica merge incremental para estado atual no Silver e gera marts analíticos no Gold.
+Este repositÃ³rio implementa um pipeline local e determinÃ­stico de CDC (Change Data Capture) para um domÃ­nio de e-commerce com arquitetura Medallion. O projeto simula mudanÃ§as transacionais para `users`, `products`, `orders`, `order_items` e `payments`, grava logs imutÃ¡veis no Bronze, aplica merge incremental para estado atual no Silver e gera marts analÃ­ticos no Gold.
 
-O objetivo é refletir um padrão de engenharia de dados de produção: geração sintética determinística com seed fixa, merge incremental idempotente, proteção contra eventos atrasados com base em `event_ts`, validação de schema dos payloads CDC e métricas de observabilidade por execução. Tudo roda localmente, sem dependência de cloud.
+O objetivo Ã© refletir um padrÃ£o de engenharia de dados de produÃ§Ã£o: geraÃ§Ã£o sintÃ©tica determinÃ­stica com seed fixa, merge incremental idempotente, proteÃ§Ã£o contra eventos atrasados com base em `event_ts`, validaÃ§Ã£o de schema dos payloads CDC e mÃ©tricas de observabilidade por execuÃ§Ã£o. Tudo roda localmente, sem dependÃªncia de cloud.
 
-Os marts Gold são derivados exclusivamente das tabelas Silver de estado atual: `daily_gmv`, `orders_by_status`, `refund_rate`, `top_products` e `basic_retention`. Em cada execução, o pipeline aplica checagens de qualidade (contagem mínima, integridade referencial, valores monetários não negativos e verificação simples de anomalia de volume).
+Os marts Gold sÃ£o derivados exclusivamente das tabelas Silver de estado atual: `daily_gmv`, `orders_by_status`, `refund_rate`, `top_products` e `basic_retention`. Em cada execuÃ§Ã£o, o pipeline aplica checagens de qualidade (contagem mÃ­nima, integridade referencial, valores monetÃ¡rios nÃ£o negativos e verificaÃ§Ã£o simples de anomalia de volume).
 
 ### Como executar
 
