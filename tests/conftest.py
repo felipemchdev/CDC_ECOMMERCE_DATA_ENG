@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -26,4 +27,5 @@ def settings(tmp_path: Path) -> Settings:
         metrics_root=metrics_root,
         seed=42,
         schema_version=1,
+        simulation_start_date=date(2021, 1, 1),
     )

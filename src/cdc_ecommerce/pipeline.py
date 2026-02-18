@@ -20,7 +20,12 @@ def run_pipeline_for_date(run_date: date, settings: Settings | None = None) -> d
     cfg = settings or get_settings()
     started = time.perf_counter()
 
-    events_df = generate_cdc_batch(run_date, seed=cfg.seed, schema_version=cfg.schema_version)
+    events_df = generate_cdc_batch(
+        run_date,
+        seed=cfg.seed,
+        schema_version=cfg.schema_version,
+        simulation_start_date=cfg.simulation_start_date,
+    )
     bronze_path = write_bronze_batch(events_df, cfg, run_date)
 
     silver_merger = SilverMerger(cfg)

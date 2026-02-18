@@ -7,7 +7,7 @@ from datetime import date, datetime, time, timedelta, timezone
 
 import pandas as pd
 
-START_DATE = date(2026, 1, 1)
+DEFAULT_SIMULATION_START_DATE = date(2021, 1, 1)
 COUNTRIES = ["US", "BR", "DE", "FR", "GB", "CA", "MX", "ES", "IT", "NL"]
 CATEGORIES = ["electronics", "fashion", "home", "books", "sports", "beauty", "toys"]
 CURRENCIES = ["USD", "EUR"]
@@ -70,10 +70,12 @@ def _to_iso(ts: datetime) -> str:
     return ts.astimezone(timezone.utc).isoformat()
 
 
-def _day_index(target: date) -> int:
-    idx = (target - START_DATE).days
+def _day_index(target: date, simulation_start_date: date) -> int:
+    idx = (target - simulation_start_date).days
     if idx < 0:
-        raise ValueError(f"target date {target.isoformat()} is before simulation start {START_DATE.isoformat()}")
+        raise ValueError(
+            f"target date {target.isoformat()} is before simulation start {simulation_start_date.isoformat()}"
+        )
     return idx
 
 
@@ -143,8 +145,13 @@ def _emit(
     return counter + 1
 
 
-def generate_cdc_batch(batch_date: date, seed: int = 42, schema_version: int = 1) -> pd.DataFrame:
-    day_idx = _day_index(batch_date)
+def generate_cdc_batch(
+    batch_date: date,
+    seed: int = 42,
+    schema_version: int = 1,
+    simulation_start_date: date = DEFAULT_SIMULATION_START_DATE,
+) -> pd.DataFrame:
+    day_idx = _day_index(batch_date, simulation_start_date)
     rng = random.Random(seed + (day_idx * 7_919))
     events: list[dict] = []
     counter = 0

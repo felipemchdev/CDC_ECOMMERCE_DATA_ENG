@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 
 
@@ -14,6 +15,7 @@ class Settings:
     metrics_root: Path
     seed: int = 42
     schema_version: int = 1
+    simulation_start_date: date = date(2021, 1, 1)
 
 
 def get_settings(project_root: Path | None = None) -> Settings:
