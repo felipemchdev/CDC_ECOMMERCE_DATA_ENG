@@ -89,13 +89,13 @@ class SilverMerger:
 
         for event in events:
             event_id = str(event["event_id"])
-            event_ts = pd.Timestamp(event["event_ts"], tz="UTC")
+            event_ts = _to_utc_ts(event["event_ts"])
             operation: Operation = event["operation"]
             pk = str(event["pk"])
             payload = validate_payload(entity, operation, event["payload"])
 
             existing = state.get(pk, {pk_col: pk})
-            last_event_ts = pd.Timestamp(existing.get("_last_event_ts"), tz="UTC") if existing.get("_last_event_ts") else None
+            last_event_ts = _to_utc_ts(existing.get("_last_event_ts")) if existing.get("_last_event_ts") else None
 
             if last_event_ts is not None and event_ts < last_event_ts:
                 continue
@@ -132,3 +132,7 @@ class SilverMerger:
                 merged_df[col] = pd.to_datetime(merged_df[col], utc=True, errors="coerce")
 
         return merged_df.sort_values(pk_col).reset_index(drop=True)
+
+
+def _to_utc_ts(value: object) -> pd.Timestamp:
+    return pd.to_datetime(value, utc=True)

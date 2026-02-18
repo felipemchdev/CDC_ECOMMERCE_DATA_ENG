@@ -52,6 +52,9 @@ def run_quality_checks(settings: Settings, processed_events_count: int) -> dict[
 
 
 def _volume_anomaly_check(metrics_root: Path, processed_events_count: int) -> None:
+    if processed_events_count == 0:
+        return
+
     metrics_root.mkdir(parents=True, exist_ok=True)
     history = []
     for path in sorted(metrics_root.glob("run_*.json"))[-10:]:

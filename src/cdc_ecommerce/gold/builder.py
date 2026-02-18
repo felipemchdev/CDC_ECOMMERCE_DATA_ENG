@@ -45,7 +45,8 @@ def _normalized_orders(orders: pd.DataFrame) -> pd.DataFrame:
     frame = orders.copy()
     frame["order_ts"] = pd.to_datetime(frame["order_ts"], utc=True, errors="coerce")
     frame = frame[frame["order_ts"].notna()]
-    frame = frame[~frame.get("is_deleted", False).fillna(False)]
+    if "is_deleted" in frame.columns:
+        frame = frame[~frame["is_deleted"].fillna(False)]
     frame["date"] = frame["order_ts"].dt.date
     return frame
 
@@ -69,6 +70,7 @@ def _daily_gmv(orders: pd.DataFrame, order_items: pd.DataFrame) -> pd.DataFrame:
         .reset_index(drop=True)
     )
     grouped["gmv"] = grouped["gmv"].round(2)
+    grouped["date"] = grouped["date"].astype(str)
     return grouped
 
 
@@ -83,6 +85,7 @@ def _orders_by_status(orders: pd.DataFrame) -> pd.DataFrame:
         .sort_values(["date", "status"])
         .reset_index(drop=True)
     )
+    grouped["date"] = grouped["date"].astype(str)
     return grouped
 
 
@@ -99,7 +102,9 @@ def _refund_rate(orders: pd.DataFrame) -> pd.DataFrame:
 
     result = pd.concat([refunded, paid_base], axis=1).fillna(0).reset_index()
     result["refund_rate"] = (result["refunded_orders"] / result["paid_orders"].replace(0, pd.NA)).fillna(0).round(6)
-    return result[["date", "refund_rate"]].sort_values("date").reset_index(drop=True)
+    output = result[["date", "refund_rate"]].sort_values("date").reset_index(drop=True)
+    output["date"] = output["date"].astype(str)
+    return output
 
 
 def _top_products(orders: pd.DataFrame, order_items: pd.DataFrame, products: pd.DataFrame) -> pd.DataFrame:
@@ -128,6 +133,7 @@ def _top_products(orders: pd.DataFrame, order_items: pd.DataFrame, products: pd.
     grouped["rank"] = grouped.groupby("date")["revenue"].rank(method="first", ascending=False)
     result = grouped[grouped["rank"] <= 5].drop(columns=["rank"]).reset_index(drop=True)
     result["revenue"] = result["revenue"].round(2)
+    result["date"] = result["date"].astype(str)
     return result
 
 
@@ -151,4 +157,6 @@ def _basic_retention(orders: pd.DataFrame) -> pd.DataFrame:
     grouped["retention_rate"] = (
         grouped["returning_users"] / grouped["active_users"].replace(0, pd.NA)
     ).fillna(0).round(6)
-    return grouped.sort_values("date").reset_index(drop=True)
+    output = grouped.sort_values("date").reset_index(drop=True)
+    output["date"] = output["date"].astype(str)
+    return output

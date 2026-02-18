@@ -13,7 +13,7 @@ authors = [
 ]
 dependencies = [
   "pandas>=2.2,<3",
-  "pyarrow>=15,<20",
+  "duckdb>=1.1,<2",
   "pydantic>=2.8,<3",
   "typer>=0.12,<1"
 ]
