@@ -1,0 +1,1 @@
+"""CDC batch generator."""
